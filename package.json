@@ -8,6 +8,15 @@
     "test": "node test.js",
     "security:check": "node scripts/security-guard.js"
   },
-  "keywords": ["compliance", "pld", "ofac", "pep", "ceis", "kyc", "bacen", "ponte"],
+  "keywords": [
+    "compliance",
+    "pld",
+    "ofac",
+    "pep",
+    "ceis",
+    "kyc",
+    "bacen",
+    "ponte"
+  ],
   "license": "MIT"
 }
