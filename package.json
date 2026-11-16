@@ -1,0 +1,13 @@
+{
+  "name": "compliance-pro",
+  "version": "1.0.0",
+  "description": "API e SDK Oficial de Compliance, PLD-FT, Sanções Internacionais (OFAC, ONU, UE), CEIS/CNEP (CGU) e PEP (Circular BACEN 3.978 / COAF) na Cloudflare Edge (<2ms).",
+  "type": "module",
+  "main": "compliance-pro.js",
+  "scripts": {
+    "test": "node test.js",
+    "security:check": "node scripts/security-guard.js"
+  },
+  "keywords": ["compliance", "pld", "ofac", "pep", "ceis", "kyc", "bacen", "ponte"],
+  "license": "MIT"
+}

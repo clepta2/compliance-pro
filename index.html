@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compliance &amp; PLD-FT Pro Studio • OFAC, ONU, CEIS, CNEP &amp; PEP • Ponte API</title>
+  <link rel="stylesheet" href="ponte-suite.css">
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('ponte.theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <script defer src="ponte-icons.js"></script>
+</head>
+<body>
+  <header class="ponte-header">
+    <div class="ponte-header-inner">
+      <div class="ponte-brand-block">
+        <a class="ponte-brand" href="https://ponte-marketplace.maputo2.workers.dev/#catalogo">
+          <svg class="ponte-brand-logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#a3e635"/><path d="M12 28V12L28 20L12 28Z" fill="#0c1715"/></svg>
+          <div class="ponte-brand-copy"><strong>ponte</strong><small>API MARKET · OZPRO</small></div>
+        </a>
+        <div class="ponte-breadcrumb">
+          <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo">Workspace</a>
+          <span>/</span>
+          <strong>Compliance &amp; PLD-FT Pro Studio</strong>
+        </div>
+      </div>
+      <div class="ponte-topbar-actions">
+        <span class="ponte-status-edge"><span class="ponte-status-dot"></span> Screening Anycast &lt;2ms</span>
+        <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo" class="ponte-btn-marketplace">Marketplace</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="ponte-container">
+    <div class="ponte-hero">
+      <div class="ponte-badges-bar">
+        <span class="ponte-badge mint">● Circular BACEN 3.978 &amp; COAF</span>
+        <span class="ponte-badge blue">🌎 Sanções OFAC, ONU &amp; UE</span>
+        <span class="ponte-badge amber">🏛️ CEIS, CNEP, PEP &amp; IBAMA</span>
+      </div>
+      <h1>Compliance &amp; PLD-FT Pro Studio</h1>
+      <p>Varredura instantânea de CPF, CNPJ e Nomes contra 8 listas restritivas nacionais e internacionais para onboarding bancário (KYC/KYB) e Prevenção à Lavagem de Dinheiro.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start;">
+      <div class="ponte-card">
+        <div class="ponte-card-title"><h3>Screening de PLD-FT &amp; PEP</h3></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <input type="text" id="docInput" class="ponte-input" value="111.222.333-96" style="flex:1;font-family:var(--font-mono);" placeholder="CPF ou CNPJ..." />
+          <button class="ponte-btn ponte-btn-primary" onclick="auditar()">Executar Screening</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="ponte-btn ponte-btn-secondary ponte-btn-sm" onclick="setDoc('00.000.000/0001-91')">Empresa Regular (Limpa)</button>
+          <button class="ponte-btn ponte-btn-secondary ponte-btn-sm" onclick="setDoc('111.222.333-96')">Pessoa Politicamente Exposta (PEP)</button>
+          <button class="ponte-btn ponte-btn-secondary ponte-btn-sm" onclick="setDoc('99.999.999/0001-91')">Empresa Sancionada (OFAC + CEIS)</button>
+        </div>
+        <div id="statusBox"></div>
+      </div>
+
+      <div class="ponte-card">
+        <div class="ponte-card-title"><h3>Certificado de Screening JSON</h3></div>
+        <pre id="jsonOutput" style="background:#030712;padding:14px;border-radius:8px;color:#a5f3fc;font-family:var(--font-mono);font-size:12px;max-height:420px;overflow-y:auto;white-space:pre-wrap;"></pre>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { CompliancePro } from './compliance-pro.js';
+
+    window.setDoc = function(d) {
+      document.getElementById('docInput').value = d;
+      window.auditar();
+    };
+
+    window.auditar = function() {
+      const doc = document.getElementById('docInput').value.trim();
+      const res = CompliancePro.auditarCompliance({ documento: doc });
+      document.getElementById('jsonOutput').textContent = JSON.stringify(res, null, 2);
+
+      const cor = res.sancionado ? '#ef4444' : (res.pep ? '#f59e0b' : '#10b981');
+      document.getElementById('statusBox').innerHTML = `
+        <div style="background:var(--paper-elevated);padding:14px;border-radius:10px;border:1px solid ${cor};">
+          <div style="font-size:12px;color:var(--muted);">Decisão Recomendada BACEN/COAF</div>
+          <div style="font-size:15px;font-weight:800;color:${cor};margin:4px 0;">${res.recomendacaoBacen}</div>
+          <div style="font-size:12px;color:var(--ink);">Score PLD: <strong>${res.scoreRiscoPld}/100</strong> • PEP: <strong>${res.pep ? 'SIM' : 'NÃO'}</strong> • Sancionado: <strong>${res.sancionado ? 'SIM' : 'NÃO'}</strong></div>
+        </div>
+      `;
+    };
+
+    window.auditar();
+  </script>
+</body>
+</html>
