@@ -65,7 +65,8 @@ export function auditarCompliance({ documento = '', nome = '' } = {}) {
   if (matchMock) {
     return {
       ok: true,
-      certificadoHash: 'pld_' + Buffer.from(docClean || nomeClean).toString('hex').slice(0, 16),
+      ambiente: 'SANDBOX_DEMO',
+      aviso: 'Ambiente de testes e demonstração. Dados de referência para homologação de fluxos de compliance e PLD-FT.',
       ...matchMock,
       listasVerificadas: LISTAS_MONITORADAS.map(l => l.id),
       recomendacaoBacen: matchMock.sancionado ? 'REJEITAR_ONBOARDING_E_COMUNICAR_COAF' : 'APLICAR_DILIGENCIA_REFORCADA_PEP',
@@ -75,17 +76,18 @@ export function auditarCompliance({ documento = '', nome = '' } = {}) {
 
   return {
     ok: true,
-    certificadoHash: 'pld_' + Buffer.from(docClean || nomeClean || 'clean').toString('hex').slice(0, 16),
+    ambiente: 'SANDBOX_DEMO',
+    statusConsulta: 'NAO_CONSTA_NA_BASE_DEMO',
+    aviso: 'O documento/nome consultado não consta na base de teste/sandbox. Para screening em produção com fé pública, é necessária a sincronização com os feeds oficiais da CGU (Portal da Transparência) e OFAC.',
     documento: docClean || 'N/A',
     nome: nomeClean || 'PESSOA / EMPRESA CONSULTADA',
     sancionado: false,
     pep: false,
     dadosPep: null,
-    scoreRiscoPld: 5,
-    classificacaoRisco: 'BAIXO_REGULAR',
+    scoreRiscoPld: 0,
+    classificacaoRisco: 'NAO_AVALIADO_BASE_DEMO',
     ocorrencias: [],
-    listasVerificadas: LISTAS_MONITORADAS.map(l => l.id),
-    recomendacaoBacen: 'APROVAR_ONBOARDING_PADRAO',
+    listasMonitoradasPeloLayout: LISTAS_MONITORADAS.map(l => l.id),
     timestamp: new Date().toISOString()
   };
 }
